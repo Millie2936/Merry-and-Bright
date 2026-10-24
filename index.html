@@ -1,87 +1,2572 @@
-Build a complete, interactive Christmas countdown web app called Merry & Bright, using my uploaded screenshot as the primary visual reference.
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fffdf9">
 
-IMPORTANT: Recreate the reference’s visual style as closely as possible. Do not make a generic Christmas website. Do not use Netlify. Build the app so it works in Lovable’s preview and can be published using Lovable’s own supported hosting options.
+<title>Merry & Bright</title>
 
-DESIGN
+<style>
+:root {
+  --bg: #fffdf9;
+  --card: #ffffff;
+  --ink: #514b40;
+  --muted: #898477;
+  --green: #71836b;
+  --pale: #e9eee4;
+  --red: #a85e5c;
+  --line: #eee9df;
+}
 
-• Warm ivory and cream background.
-• Elegant editorial serif typography, similar to a luxury Christmas magazine.
-• Muted cranberry-red italic accents, sage-green illustrations, soft gold details, and subtle shadows.
-• Generous whitespace, delicate dividers, tiny decorative sparkles, and a soft vintage storybook aesthetic.
-• At the top, show a small uppercase eyebrow: “THE MOST WONDERFUL LITTLE WAIT”.
-• Main headline: “A little closer to Christmas.” with Christmas in cranberry italic.
-• Subtitle: “Slow down. Get cozy. Let the magic find you.”
-• A large live countdown centered beneath the heading, with DAYS, HOURS, MINUTES, and SECONDS labels.
-• Under the countdown, create a beautiful illustrated Christmas scene featuring a decorated tree, tiny gifts, a little elf, snowy ground, and a cozy cottage.
-• Add a short caption beneath the illustration.
-• Below the hero, create three elegant dashboard cards inspired by the screenshot: “Today’s Little Magic”, “Now Playing”, and “Make Yourself at Home”.
-• Make the layout responsive for iPhone, tablet, and desktop. On iPhone, stack the cards neatly without horizontal overflow.
+* {
+  box-sizing: border-box;
+}
 
-LIVE CHRISTMAS COUNTDOWN
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  padding-bottom: 95px;
+}
 
-• Count down to December 25 at midnight in the user’s local time zone.
-• Update every second.
-• Correctly handle leap years, date changes, and the countdown resetting for the next Christmas.
-• Show a warm Christmas message when appropriate.
+button {
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
 
-INTERACTIVE SNOW GLOBE
+header {
+  text-align: center;
+  padding: 28px 18px 12px;
+}
 
-• Create an actual interactive snow globe, not a static image.
-• Use Canvas, SVG, or an equivalent performant approach to animate falling snow.
-• Include a miniature Christmas tree, cozy cottage, gifts, and tiny glowing lights inside the globe.
-• Let the user tap or click the globe to create a magical snowfall burst.
-• Support dragging or shaking gestures to swirl the snow.
-• Let the snow settle naturally.
-• Add subtle parallax, twinkling lights, gentle glow, and optional sound effects.
-• Add a snowfall toggle and a reset button.
-• Make all interactions work on touchscreens and desktops.
+.brand {
+  font: 11px Arial, sans-serif;
+  letter-spacing: 4px;
+  color: var(--green);
+  text-transform: uppercase;
+}
 
-CHRISTMAS MUSIC PLAYER
+h1 {
+  font-size: clamp(36px, 8vw, 54px);
+  font-weight: normal;
+  margin: 13px 0 9px;
+  color: #555448;
+}
 
-• Create a functional music-player card with play/pause, previous, next, progress, and track title.
-• Include a Christmas playlist selection option.
-• Integrate a Spotify playlist embed or user-provided audio files where supported.
-• Do not pretend music is playing if no playable audio source is available.
-• Do not autoplay music. Start playback after a user interaction.
-• Include a clear, friendly connection state when Spotify needs to be connected.
-• Keep the design consistent with the screenshot.
+.subtitle {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--muted);
+}
 
-TODAY’S LITTLE MAGIC
+main {
+  max-width: 680px;
+  margin: auto;
+  padding: 10px 17px 25px;
+}
 
-• Create a daily Christmas activity or cozy suggestion.
-• Include interactive buttons such as “Decorate the tree” and “Present hunt”.
-• Allow completed activities to be checked off.
-• Rotate the daily suggestion based on the date.
-• Include subtle celebratory animations.
+.page {
+  display: none;
+}
 
-MAKE YOURSELF AT HOME
+.page.active {
+  display: block;
+}
 
-• Add clickable mood options: Evergreen Afternoon, Winter Lavender, and Blush Christmas.
-• Changing the mood should update accent colors and subtle background details throughout the site.
-• Add a snowfall intensity control.
-• Add a reduced-motion option and a sound toggle.
-• Persist preferences locally when possible.
+.label {
+  font: 10px Arial, sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 12px;
+}
 
-FINISHING DETAILS
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 20px 0;
+}
 
-• Smooth, delicate transitions.
-• Tiny floating sparkles and soft snowfall.
-• Interactive tree decorations and gifts.
-• Beautiful typography and spacing matching the uploaded reference.
-• Avoid excessive bright reds, saturated greens, cartoonish fonts, clutter, or generic dashboard styling.
-• Include appropriate loading, empty, and error states.
-• Ensure the countdown and every control work correctly.
-• Use accessible contrast, keyboard support, and mobile-friendly touch targets.
+.time {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 3px;
+  text-align: center;
+}
 
-TECHNICAL REQUIREMENTS
+.time strong {
+  display: block;
+  font-size: clamp(22px, 6vw, 32px);
+  font-weight: normal;
+  color: var(--red);
+}
 
-• Use React, TypeScript, and Tailwind CSS with clean, reusable components.
-• Use Lucide icons where suitable.
-• Avoid unnecessary dependencies and oversized animations.
-• Do not use Netlify, Netlify deployment settings, or Netlify-specific configuration.
-• Use Lovable’s supported preview and publishing workflow.
-• Do not require paid APIs for the basic countdown or snow globe.
-• If an external integration requires credentials, explain how to configure it rather than inventing credentials.
-• Test all interactive controls and fix runtime errors before declaring the app complete.
+.time span {
+  font: 9px Arial, sans-serif;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
 
-Build the complete working app, not just a mockup. Start with the overall layout and visual styling, then implement and test the countdown, snow globe, music player, mood settings, and daily activities.
+.town {
+  background: linear-gradient(#f4f3ed, #e5ecdf);
+  border-radius: 20px;
+  text-align: center;
+  padding: 20px 10px 0;
+  overflow: hidden;
+  box-shadow: 0 5px 24px rgba(83, 70, 49, .06);
+}
+
+.town-title {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #687761;
+}
+
+.snowflakes {
+  font-size: 18px;
+  letter-spacing: 9px;
+  margin: 18px 0;
+}
+
+.trees {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 5px;
+  min-height: 100px;
+}
+
+.tree {
+  font-size: clamp(36px, 10vw, 61px);
+  line-height: 1.2;
+}
+
+.tree.small {
+  font-size: 37px;
+}
+
+.houses {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 2px;
+  font-size: clamp(29px, 8vw, 46px);
+  margin-top: 10px;
+}
+
+.town-ground {
+  background: #dce5d6;
+  margin: 10px -10px 0;
+  padding: 13px 5px;
+  color: #65745d;
+  font-size: 12px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 20px;
+  margin-top: 17px;
+  box-shadow: 0 5px 24px rgba(83, 70, 49, .04);
+}
+
+.card h2 {
+  font-size: 24px;
+  font-weight: normal;
+  margin: 0 0 10px;
+}
+
+.card p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.primary {
+  border: none;
+  background: var(--green);
+  color: white;
+  border-radius: 30px;
+  padding: 12px 18px;
+  font-size: 13px;
+}
+
+.secondary {
+  border: 1px solid var(--line);
+  background: #faf8f2;
+  color: var(--ink);
+  border-radius: 30px;
+  padding: 10px 15px;
+  font-size: 13px;
+}
+
+.activity {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.activity:last-child {
+  border-bottom: none;
+}
+
+.activity input {
+  accent-color: var(--green);
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.activity.done span {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.progress {
+  height: 6px;
+  background: var(--pale);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--green);
+  transition: width .3s;
+}
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: rgba(255, 253, 249, .97);
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-around;
+  padding: 9px 4px calc(9px + env(safe-area-inset-bottom));
+}
+
+.nav button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  padding: 5px 0;
+}
+
+.nav button .icon {
+  display: block;
+  font-size: 21px;
+  margin-bottom: 5px;
+}
+
+.nav button.active {
+  color: var(--green);
+}
+
+.big-globe {
+  font-size: 105px;
+  display: inline-block;
+  margin: 20px 0;
+  cursor: pointer;
+  user-select: none;
+  transition: transform .25s;
+}
+
+.big-globe.shake {
+  transform: rotate(-12deg) scale(1.08);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-top: 18px;
+}
+
+.calendar-day {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 12px;
+  padding: 5px 1px;
+}
+
+.calendar-day.event {
+  background: var(--pale);
+  border-color: #d9e2d2;
+}
+
+.calendar-day.selected {
+  background: var(--green);
+  color: white;
+}
+
+.calendar-day:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
+.weekday {
+  font: 10px Arial, sans-serif;
+  color: var(--muted);
+  text-align: center;
+  padding: 5px 0;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-row select,
+.setting-row input {
+  max-width: 130px;
+}
+
+input[type="color"] {
+  width: 40px;
+  height: 32px;
+  border: none;
+  background: transparent;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--green);
+}
+
+.music-link {
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+  background: #faf8f2;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.music-link span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  padding: 24px 0;
+}
+
+@media (max-width: 380px) {
+  .countdown {
+    gap: 5px;
+  }
+
+  .time {
+    padding: 12px 1px;
+  }
+
+  .nav button {
+    font-size: 9px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">A little Christmas magic</div>
+  <h1>Merry &amp; Bright</h1>
+  <div class="subtitle">
+    A little closer to Christmas.<br>
+    Slow down and get cozy.<br>
+    Let the magic find you. ✨
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME PAGE -->
+  <section id="home" class="page active">
+
+    <div class="card">
+      <div class="label">The countdown is on</div>
+      <h2>Until Christmas Day 🎄</h2>
+
+      <div class="countdown">
+        <div class="time">
+          <strong id="days">00</strong>
+          <span>Days</span>
+        </div>
+
+        <div class="time">
+          <strong id="hours">00</strong>
+          <span>Hours</span>
+        </div>
+
+        <div class="time">
+          <strong id="minutes">00</strong>
+          <span>Minutes</span>
+        </div>
+
+        <div class="time">
+          <strong id="seconds">00</strong>
+          <span>Seconds</span>
+        </div>
+      </div>
+
+      <p id="countdown-message">
+        Every little moment brings a little more magic.
+      </p>
+    </div>
+
+    <div class="town" style="margin-top:17px">
+      <div class="town-title">✧ WELCOME TO CHRISTMAS TOWN ✧</div>
+
+      <div class="snowflakes">❄ &nbsp; ✦ &nbsp; ❄ &nbsp; ✧</div>
+
+      <div class="trees">
+        <span class="tree small">🌲</span>
+        <span class="tree">🎄</span>
+        <span class="tree small">🌲</span>
+        <span class="tree">🎄</span>
+        <span class="tree small">🌲</span>
+      </div>
+
+      <div class="houses">
+        <span>🏠</span>
+        <span>🏡</span>
+        <span>🏠</span>
+        <span>🏡</span>
+        <span>🏠</span>
+      </div>
+
+      <div class="town-ground">
+        🧝🏻‍♀️ &nbsp; A tiny town full of holiday magic &nbsp; 🧝🏻‍♂️
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">A little moment for you</div>
+      <h2 id="magic-title">Today's Little Magic ✨</h2>
+      <p id="magic-text">
+        Make a warm drink, put on your coziest sweater,
+        and enjoy five minutes of doing absolutely nothing.
+      </p>
+      <button class="primary" onclick="newMagic()">
+        Find a little magic ✨
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="label">Your holiday list</div>
+      <h2>Little Things to Do 🎀</h2>
+      <p>Small moments make the sweetest memories.</p>
+
+      <div id="home-activities"></div>
+
+      <div class="progress">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+
+      <p id="progress-text">0 of 6 little moments completed</p>
+    </div>
+
+  </section>
+
+  <!-- CALENDAR PAGE -->
+  <section id="calendar" class="page">
+
+    <div class="card">
+      <div class="label">Make a little plan</div>
+      <h2>Christmas Calendar 📅</h2>
+      <p>Choose a day to add a little holiday magic.</p>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <button class="secondary" onclick="changeMonth(-1)">
+          ← Previous
+        </button>
+
+        <strong id="month-title"></strong>
+
+        <button class="secondary" onclick="changeMonth(1)">
+          Next →
+        </button>
+      </div>
+
+      <div class="calendar-grid" id="calendar-grid"></div>
+
+      <div class="card" style="margin-top:18px">
+        <div class="label">Your selected day</div>
+        <h2 id="selected-date">Choose a date</h2>
+        <p id="selected-event">Your little plans will appear here.</p>
+
+        <input
+          id="event-input"
+          type="text"
+          maxlength="120"
+          placeholder="Add a little plan..."
+          style="width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:14px Georgia,serif"
+        >
+
+        <button
+          class="primary"
+          style="margin-top:12px"
+          onclick="saveEvent()"
+        >
+          Save my plan
+        </button>
+
+        <button
+          class="secondary"
+          style="margin-top:12px"
+          onclick="deleteEvent()"
+        >
+          Remove plan
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- MUSIC PAGE -->
+  <section id="music" class="page">
+
+    <div class="card">
+      <div class="label">A little holiday soundtrack</div>
+      <h2>Christmas Music 🎵</h2>
+
+      <p>
+        Settle in, get cozy, and find a soundtrack for your
+        own little Christmas movie.
+      </p>
+
+      <a
+        class="music-link"
+        href="https://www.youtube.com/results?search_query=cozy+christmas+music"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🎄 Cozy Christmas Music<br>
+        <span>Open holiday music on YouTube ↗</span>
+      </a>
+
+      <a
+        class="music-link"
+        href="https://www.youtube.com/results?search_query=christmas+jazz+cafe"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ☕ Christmas Café Jazz<br>
+        <span>Soft music for a cozy afternoon ↗</span>
+      </a>
+
+      <a
+        class="music-link"
+        href="https://www.youtube.com/results?search_query=peaceful+winter+piano"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ❄️ Peaceful Winter Piano<br>
+        <span>Gentle piano for a quiet evening ↗</span>
+      </a>
+
+      <a
+        class="music-link"
+        href="https://www.youtube.com/results?search_query=christmas+cabin+ambience+fireplace"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🕯️ Christmas Cabin Ambience<br>
+        <span>A virtual fireplace and winter atmosphere ↗</span>
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="label">A gentle reminder</div>
+      <h2>Make yourself at home 🤍</h2>
+      <p>
+        There is no rush to make the season perfect.
+        Put on something comforting, take a breath,
+        and enjoy the little things.
+      </p>
+    </div>
+
+  </section>
+
+  <!-- SNOW GLOBE PAGE -->
+  <section id="globe" class="page">
+
+    <div class="card" style="text-align:center">
+      <div class="label">A tiny world of winter magic</div>
+      <h2>Your Little Snow Globe ❄️</h2>
+
+      <p>
+        Tap the globe to give it a little shake
+        and watch the snow fall.
+      </p>
+
+      <div
+        class="big-globe"
+        id="snow-globe"
+        onclick="shakeGlobe()"
+        role="button"
+        tabindex="0"
+        aria-label="Shake the snow globe"
+      >
+        🔮
+      </div>
+
+      <div id="globe-scene"
+           style="font-size:30px;letter-spacing:5px">
+        🌲 🏠 🎄
+      </div>
+
+      <p id="globe-message">
+        A little winter wonderland, just for you.
+      </p>
+
+      <button class="primary" onclick="shakeGlobe()">
+        Shake the snow globe ✨
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="label">A little wish</div>
+      <h2>Wish Upon a Snowflake ⭐</h2>
+
+      <p>
+        Think of one little thing you're looking forward to
+        this Christmas.
+      </p>
+
+      <button class="secondary" onclick="makeWish()">
+        Make a Christmas wish
+      </button>
+
+      <p id="wish-message"></p>
+    </div>
+
+  </section>
+
+  <!-- SETTINGS PAGE -->
+  <section id="settings" class="page">
+
+    <div class="card">
+      <div class="label">Make it your own</div>
+      <h2>Settings ⚙️</h2>
+
+      <p>
+        A few little touches to make your Christmas
+        space feel like yours.
+      </p>
+
+      <div class="setting-row">
+        <span>Greeting</span>
+
+        <select id="greeting-setting" onchange="updateGreeting()">
+          <option value="Merry & Bright">Merry & Bright</option>
+          <option value="A Cozy Christmas">A Cozy Christmas</option>
+          <option value="Winter Wishes">Winter Wishes</option>
+        </select>
+      </div>
+
+      <div class="setting-row">
+        <span>Background color</span>
+        <input
+          id="color-setting"
+          type="color"
+          value="#fffdf9"
+          onchange="changeBackground()"
+        >
+      </div>
+
+      <div class="setting-row">
+        <span>Show countdown</span>
+        <input
+          id="countdown-setting"
+          type="checkbox"
+          checked
+          onchange="toggleCountdown()"
+        >
+      </div>
+
+      <div class="setting-row">
+        <span>Show falling snow</span>
+        <input
+          id="snow-setting"
+          type="checkbox"
+          onchange="toggleSnow()"
+        >
+      </div>
+
+      <div class="setting-row">
+        <span>Reset activity checklist</span>
+        <button class="secondary" onclick="resetActivities()">
+          Reset
+        </button>
+      </div>
+
+      <p>
+        Your preferences are saved in this browser on this device.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="label">A little note</div>
+      <h2>Slow down & get cozy 🤍</h2>
+      <p>
+        Let the magic find you.
+        One little moment at a time.
+      </p>
+    </div>
+
+  </section>
+
+  <footer>
+    Made with a little Christmas magic ✨
+  </footer>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="nav" aria-label="Main navigation">
+
+  <button class="active" data-page="home" onclick="showPage('home',this)">
+    <span class="icon">⌂</span>
+    Home
+  </button>
+
+  <button data-page="calendar" onclick="showPage('calendar',this)">
+    <span class="icon">🗓</span>
+    Calendar
+  </button>
+
+  <button data-page="music" onclick="showPage('music',this)">
+    <span class="icon">♫</span>
+    Music
+  </button>
+
+  <button data-page="globe" onclick="showPage('globe',this)">
+    <span class="icon">❄</span>
+    Snow Globe
+  </button>
+
+  <button data-page="settings" onclick="showPage('settings',this)">
+    <span class="icon">⚙</span>
+    Settings
+  </button>
+
+</nav>
+
+<script>
+/* CHRISTMAS COUNTDOWN */
+
+function updateCountdown() {
+  const now = new Date();
+  let christmas = new Date(now.getFullYear(), 11, 25, 0, 0, 0);
+
+  if (now >= christmas) {
+    christmas = new Date(now.getFullYear() + 1, 11, 25, 0, 0, 0);
+  }
+
+  const difference = christmas.getTime() - now.getTime();
+
+  const days = Math.floor(difference / 86400000);
+  const hours = Math.floor((difference % 86400000) / 3600000);
+  const minutes = Math.floor((difference % 3600000) / 60000);
+  const seconds = Math.floor((difference % 60000) / 1000);
+
+  document.getElementById("days").textContent = days;
+  document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+  document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+  document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+
+  document.getElementById("countdown-message").textContent =
+    days === 0
+      ? "Christmas is almost here. Enjoy every little moment! 🎄"
+      : "Every little moment brings a little more magic. ✨";
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+
+/* BOTTOM NAVIGATION */
+
+function showPage(pageId, button) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.remove("active");
+  });
+
+  document.getElementById(pageId).classList.add("active");
+
+  document.querySelectorAll(".nav button").forEach(navButton => {
+    navButton.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  if (pageId === "calendar") {
+    renderCalendar();
+  }
+}
+
+
+/* DAILY LITTLE MAGIC */
+
+const magicIdeas = [
+  {
+    title: "Today's Little Magic ✨",
+    text: "Make a warm drink, put on your coziest sweater, and enjoy five minutes of doing absolutely nothing."
+  },
+  {
+    title: "A Little Kindness 🤍",
+    text: "Send someone a kind message or tell them one thing you appreciate about them."
+  },
+  {
+    title: "Cozy Corner ☕",
+    text: "Find your favorite blanket, turn on a soft light, and enjoy a peaceful moment."
+  },
+  {
+    title: "Christmas Creativity 🎀",
+    text: "Draw a tiny Christmas village, decorate a card, or make something just for fun."
+  },
+  {
+    title: "Winter Wonder ❄️",
+    text: "Look outside for a moment and notice something beautiful about the world around you."
+  },
+  {
+    title: "A Little Nostalgia 🎄",
+    text: "Think of a favorite holiday memory and write down what made it special."
+  },
+  {
+    title: "Slow Sunday Feeling 🕯️",
+    text: "Put on some peaceful music and give yourself permission to take things slowly."
+  }
+];
+
+let magicIndex = 0;
+
+function newMagic() {
+  magicIndex = (magicIndex + 1) % magicIdeas.length;
+
+  document.getElementById("magic-title").textContent =
+    magicIdeas[magicIndex].title;
+
+  document.getElementById("magic-text").textContent =
+    magicIdeas[magicIndex].text;
+}
+
+
+/* INTERACTIVE ACTIVITY CHECKLIST */
+
+const activityIdeas = [
+  "Make a cozy Christmas playlist 🎵",
+  "Watch a favorite holiday movie 🎬",
+  "Make hot chocolate or another warm drink ☕",
+  "Write down three things you're grateful for 🤍",
+  "Decorate a little corner of your room 🎄",
+  "Make or write a Christmas card 🎀"
+];
+
+const activityContainer = document.getElementById("home-activities");
+
+function loadActivities() {
+  activityContainer.innerHTML = "";
+
+  activityIdeas.forEach((idea, index) => {
+    const row = document.createElement("label");
+    row.className = "activity";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked =
+      localStorage.getItem("mb-activity-" + index) === "true";
+
+    const text = document.createElement("span");
+    text.textContent = idea;
+
+    row.appendChild(checkbox);
+    row.appendChild(text);
+
+    checkbox.addEventListener("change", () => {
+      localStorage.setItem(
+        "mb-activity-" + index,
+        String(checkbox.checked)
+      );
+
+      row.classList.toggle("done", checkbox.checked);
+      updateProgress();
+    });
+
+    row.classList.toggle("done", checkbox.checked);
+
+    activityContainer.appendChild(row);
+  });
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const boxes = activityContainer.querySelectorAll("input");
+  const complete = [...boxes].filter(box => box.checked).length;
+
+  document.getElementById("progress-fill").style.width =
+    (complete / activityIdeas.length * 100) + "%";
+
+  document.getElementById("progress-text").textContent =
+    complete + " of " + activityIdeas.length +
+    " little moments completed";
+}
+
+function resetActivities() {
+  activityIdeas.forEach((_, index) => {
+    localStorage.removeItem("mb-activity-" + index);
+  });
+
+  loadActivities();
+}
+
+loadActivities();
+
+
+/* CHRISTMAS CALENDAR */
+
+let calendarDate = new Date();
+calendarDate = new Date(
+  calendarDate.getFullYear(),
+  calendarDate.getMonth(),
+  1
+);
+
+let selectedDate = null;
+
+function dateKey(date) {
+  return date.getFullYear() + "-" +
+    String(date.getMonth() + 1).padStart(2, "0") + "-" +
+    String(date.getDate()).padStart(2, "0");
+}
+
+function getEvents() {
+  try {
+    return JSON.parse(localStorage.getItem("mb-calendar-events") || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function renderCalendar() {
+  const grid = document.getElementById("calendar-grid");
+  const title = document.getElementById("month-title");
+
+  grid.innerHTML = "";
+
+  title.textContent = calendarDate.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric"
+  });
+
+  ["S", "M", "T", "W", "T", "F", "S"].forEach(day => {
+    const weekday = document.createElement("div");
+    weekday.className = "weekday";
+    weekday.textContent = day;
+    grid.appendChild(weekday);
+  });
+
+  const firstDay = calendarDate.getDay();
+
+  const year = calendarDate.getFullYear();
+  const month = calendarDate.getMonth();
+
+  const numberOfDays = new Date(year, month + 1, 0).getDate();
+  const events = getEvents();
+
+  for (let i = 0; i < firstDay; i++) {
+    grid.appendChild(document.createElement("div"));
+  }
+
+  for (let day = 1; day <= numberOfDays; day++) {
+    const date = new Date(year, month, day);
+    const key = dateKey(date);
+
+    const button = document.createElement("button");
+    button.className = "calendar-day";
+    button.textContent = day;
+
+    if (events[key]) {
+      button.classList.add("event");
+      button.title = events[key];
+    }
+
+    if (selectedDate === key) {
+      button.classList.add("selected");
+    }
+
+    button.addEventListener("click", () => {
+      selectedDate = key;
+
+      document.getElementById("selected-date").textContent =
+        date.toLocaleDateString("en-US", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric"
+        });
+
+      document.getElementById("event-input").value =
+        events[key] || "";
+
+      document.getElementById("selected-event").textContent =
+        events[key] || "No plans saved for this day yet.";
+
+      renderCalendar();
+    });
+
+    grid.appendChild(button);
+  }
+}
+
+function changeMonth(amount) {
+  calendarDate = new Date(
+    calendarDate.getFullYear(),
+    calendarDate.getMonth() + amount,
+    1
+  );
+
+  renderCalendar();
+}
+
+function saveEvent() {
+  if (!selectedDate) {
+    alert("Choose a day on the calendar first!");
+    return;
+  }
+
+  const value = document.getElementById("event-input").value.trim();
+
+  const events = getEvents();
+
+  if (value) {
+    events[selectedDate] = value;
+  } else {
+    delete events[selectedDate];
+  }
+
+  localStorage.setItem("mb-calendar-events", JSON.stringify(events));
+
+  document.getElementById("selected-event").textContent =
+    value || "No plans saved for this day yet.";
+
+  renderCalendar();
+}
+
+function deleteEvent() {
+  if (!selectedDate) {
+    alert("Choose a day on the calendar first!");
+    return;
+  }
+
+  const events = getEvents();
+
+  delete events[selectedDate];
+
+  localStorage.setItem("mb-calendar-events", JSON.stringify(events));
+
+  document.getElementById("event-input").value = "";
+  document.getElementById("selected-event").textContent =
+    "No plans saved for this day yet.";
+
+  renderCalendar();
+}
+
+renderCalendar();
+
+
+/* INTERACTIVE SNOW GLOBE */
+
+let globeTimeout;
+
+function shakeGlobe() {
+  const globe = document.getElementById("snow-globe");
+  const message = document.getElementById("globe-message");
+
+  globe.classList.add("shake");
+
+  message.textContent =
+    "❄️ ✨ ❄️ Let it snow, let it snow, let it snow! ❄️ ✨ ❄️";
+
+  clearTimeout(globeTimeout);
+
+  globeTimeout = setTimeout(() => {
+    globe.classList.remove("shake");
+
+    message.textContent =
+      "The snow has settled. Your little winter world is peaceful again. 🤍";
+  }, 1800);
+}
+
+document.getElementById("snow-globe").addEventListener("keydown", event => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    shakeGlobe();
+  }
+});
+
+function makeWish() {
+  const wishes = [
+    "May your days be cozy and your heart feel light. ✨",
+    "Here's to little moments that turn into lovely memories. 🎄",
+    "May something wonderful surprise you this season. ❄️",
+    "Remember: the little things are often the most magical. 🤍",
+    "May your Christmas be full of warmth, kindness, and joy. 🎀"
+  ];
+
+  const wish = wishes[Math.floor(Math.random() * wishes.length)];
+
+  document.getElementById("wish-message").textContent = wish;
+}
+
+
+/* PERSONALIZATION SETTINGS */
+
+function updateGreeting() {
+  const greeting = document.getElementById("greeting-setting").value;
+
+  document.querySelector("h1").textContent = greeting;
+
+  localStorage.setItem("mb-greeting", greeting);
+}
+
+function changeBackground() {
+  const color = document.getElementById("color-setting").value;
+
+  document.documentElement.style.setProperty("--bg", color);
+
+  localStorage.setItem("mb-background", color);
+}
+
+function toggleCountdown() {
+  const checked =
+    document.getElementById("countdown-setting").checked;
+
+  document.querySelector("#home .countdown").style.display =
+    checked ? "grid" : "none";
+
+  document.querySelector("#home .countdown").previousElementSibling
+    .style.display = checked ? "block" : "none";
+
+  localStorage.setItem("mb-show-countdown", String(checked));
+}
+
+let snowEnabled = false;
+let snowTimer = null;
+
+function toggleSnow() {
+  snowEnabled = document.getElementById("snow-setting").checked;
+
+  if (snowEnabled) {
+    startSnow();
+  } else {
+    stopSnow();
+  }
+
+  localStorage.setItem("mb-show-snow", String(snowEnabled));
+}
+
+function startSnow() {
+  stopSnow();
+
+  snowTimer = setInterval(() => {
+    const flake = document.createElement("div");
+
+    flake.textContent = Math.random() > 0.5 ? "❄" : "✧";
+
+    flake.style.position = "fixed";
+    flake.style.top = "-20px";
+    flake.style.left = Math.random() * 100 + "vw";
+    flake.style.zIndex = "20";
+    flake.style.pointerEvents = "none";
+    flake.style.color = "#aab9c5";
+    flake.style.fontSize = (10 + Math.random() * 12) + "px";
+    flake.style.opacity = "0.8";
+    flake.style.transition = "transform 5s linear, opacity 5s linear";
+
+    document.body.appendChild(flake);
+
+    requestAnimationFrame(() => {
+      flake.style.transform =
+        "translate(" + (Math.random() * 70 - 35) +
+        "px, " + (window.innerHeight + 40) + "px) rotate(360deg)";
+
+      flake.style.opacity = "0.1";
+    });
+
+    setTimeout(() => flake.remove(), 5200);
+  }, 350);
+}
+
+function stopSnow() {
+  clearInterval(snowTimer);
+  snowTimer = null;
+}
+
+function loadSettings() {
+  const greeting = localStorage.getItem("mb-greeting");
+  const background = localStorage.getItem("mb-background");
+  const countdown = localStorage.getItem("mb-show-countdown");
+  const snow = localStorage.getItem("mb-show-snow");
+
+  if (greeting) {
+    document.getElementById("greeting-setting").value = greeting;
+    document.querySelector("h1").textContent = greeting;
+  }
+
+  if (background) {
+    document.getElementById("color-setting").value = background;
+    document.documentElement.style.setProperty("--bg", background);
+  }
+
+  if (countdown === "false") {
+    document.getElementById("countdown-setting").checked = false;
+    toggleCountdown();
+  }
+
+  if (snow === "true") {
+    document.getElementById("snow-setting").checked = true;
+    toggleSnow();
+  }
+}
+
+loadSettings();
+</script>
+
+</body>
+</html>
+Step 3: Save your app
+After pasting the entire code:
+Click Commit changes.
+Confirm the changes.
+Keep your repository private if you don't want to publish it yet.
+One important thing: This creates the working app code, but it does not automatically put the app on your iPhone Home Screen. We can work on that separately after the app itself is built.
+Also, the Christmas town currently uses cute emoji illustrations rather than custom-drawn artwork, and the music page opens music searches rather than playing audio inside the app.
+Tell me when you've pasted the code and saved it. Then we can check that everything is in place before moving on. 🎄🤍
+Here's the complete code. Doctype HTML, HTML, head, meta charset UTF 8, meta name viewport content width device width, initial scale 1.0, meta theme color hashtag FFFDF9, title, Merry and Bright, style, root variables for background, cards, ink, muted green, pale, red, and line, basic body styles, top intro with Merry and Bright and your subtitle, main with five pages, home, activities, calendar, music, and settings. a bottom nav with buttons to switch pages, and a small script that makes the countdown work and switches between pages. Paste it all in, then click commit changes to save.
+Um, do I actually have to physically type everything in
+Mm-hmm. Yeah, you'll paste the code into the file, not retype it by hand. Just select all the old stuff,
+No, because it's not it's not letting me paste it on my computer
+Mm, I'll help you sort that out, step by step. You don't have to type everything.
+step by step
+Let's try one thing at a time. Step 1. On your computer, go back to my message with the code. Click inside the code box. Look for a copy button, usually two little squares in the corner, click copy. Step 2. Go back to GitHub. Open your index.html file, click the pencil to edit it, click inside the big code box, and press Ctrl plus V to paste. Don't click commit changes yet, let's just make sure you see the code appear. Can you tell me which of these happens: nothing happens, you can't find the copy button, it says you can't paste, or something else entirely?
+You're using the free version of ChatGPT. Upgrade for advanced models, better memory, and higher-quality image creation.
+Try Plus free
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#fffdf9">
+
+<title>Merry & Bright</title>
+
+<style>
+:root {
+  --bg: #fffdf9;
+  --card: #ffffff;
+  --ink: #514b40;
+  --muted: #898477;
+  --green: #71836b;
+  --pale: #e9eee4;
+  --red: #a85e5c;
+  --line: #eee9df;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  padding-bottom: 95px;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+header {
+  text-align: center;
+  padding: 28px 18px 12px;
+}
+
+.brand {
+  font: 11px Arial, sans-serif;
+  letter-spacing: 4px;
+  color: var(--green);
+  text-transform: uppercase;
+}
+
+h1 {
+  font-size: clamp(36px, 8vw, 54px);
+  font-weight: normal;
+  margin: 13px 0 9px;
+  color: #555448;
+}
+
+.subtitle {
+  font-size: 15px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+main {
+  max-width: 680px;
+  margin: auto;
+  padding: 10px 17px 25px;
+}
+
+.page {
+  display: none;
+}
+
+.page.active {
+  display: block;
+}
+
+.label {
+  font: 10px Arial, sans-serif;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 12px;
+}
+
+.countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.time {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 3px;
+  text-align: center;
+}
+
+.time strong {
+  display: block;
+  font-size: clamp(22px, 6vw, 32px);
+  font-weight: normal;
+  color: var(--red);
+}
+
+.time span {
+  font: 9px Arial, sans-serif;
+  letter-spacing: 1px;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.town {
+  background: linear-gradient(#f4f3ed, #e5ecdf);
+  border-radius: 20px;
+  text-align: center;
+  padding: 20px 10px 0;
+  overflow: hidden;
+  box-shadow: 0 5px 24px rgba(83, 70, 49, .06);
+}
+
+.town-title {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #687761;
+}
+
+.snowflakes {
+  font-size: 18px;
+  letter-spacing: 9px;
+  margin: 18px 0;
+}
+
+.trees {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 5px;
+  min-height: 100px;
+}
+
+.tree {
+  font-size: clamp(36px, 10vw, 61px);
+  line-height: 1.2;
+}
+
+.tree.small {
+  font-size: 37px;
+}
+
+.houses {
+  display: flex;
+  justify-content: center;
+  align-items: end;
+  gap: 2px;
+  font-size: clamp(29px, 8vw, 46px);
+  margin-top: 10px;
+}
+
+.town-ground {
+  background: #dce5d6;
+  margin: 10px -10px 0;
+  padding: 13px 5px;
+  color: #65745d;
+  font-size: 12px;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 20px;
+  margin-top: 17px;
+  box-shadow: 0 5px 24px rgba(83, 70, 49, .04);
+}
+
+.card h2 {
+  font-size: 24px;
+  font-weight: normal;
+  margin: 0 0 10px;
+}
+
+.card p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--muted);
+}
+
+.primary {
+  border: none;
+  background: var(--green);
+  color: white;
+  border-radius: 30px;
+  padding: 12px 18px;
+  font-size: 13px;
+}
+
+.secondary {
+  border: 1px solid var(--line);
+  background: #faf8f2;
+  color: var(--ink);
+  border-radius: 30px;
+  padding: 10px 15px;
+  font-size: 13px;
+}
+
+.activity {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 13px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.activity:last-child {
+  border-bottom: none;
+}
+
+.activity input {
+  accent-color: var(--green);
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}
+
+.activity.done span {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+
+.progress {
+  height: 6px;
+  background: var(--pale);
+  border-radius: 20px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+
+.progress-fill {
+  width: 0%;
+  height: 100%;
+  background: var(--green);
+  transition: width .3s;
+}
+
+.nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: rgba(255, 253, 249, .97);
+  border-top: 1px solid var(--line);
+  display: flex;
+  justify-content: space-around;
+  padding: 9px 4px calc(9px + env(safe-area-inset-bottom));
+}
+
+.nav button {
+  flex: 1;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  font-size: 10px;
+  padding: 5px 0;
+}
+
+.nav button .icon {
+  display: block;
+  font-size: 21px;
+  margin-bottom: 5px;
+}
+
+.nav button.active {
+  color: var(--green);
+}
+
+.big-globe {
+  font-size: 105px;
+  display: inline-block;
+  margin: 20px 0;
+  cursor: pointer;
+  user-select: none;
+  transition: transform .25s;
+}
+
+.big-globe.shake {
+  transform: rotate(-12deg) scale(1.08);
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  margin-top: 18px;
+}
+
+.calendar-day {
+  min-height: 42px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 8px;
+  color: var(--ink);
+  font-size: 12px;
+  padding: 5px 1px;
+}
+
+.calendar-day.event {
+  background: var(--pale);
+  border-color: #d9e2d2;
+}
+
+.calendar-day.selected {
+  background: var(--green);
+  color: white;
+}
+
+.calendar-day:disabled {
+  opacity: .35;
+  cursor: default;
+}
+
+.weekday {
+  font: 10px Arial, sans-serif;
+  color: var(--muted);
+  text-align: center;
+  padding: 5px 0;
+}
+
+.setting-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.setting-row:last-child {
+  border-bottom: none;
+}
+
+.setting-row select,
+.setting-row input {
+  max-width: 130px;
+}
+
+input[type="color"] {
+  width: 40px;
+  height: 32px;
+  border: none;
+  background: transparent;
+}
+
+input[type="checkbox"] {
+  accent-color: var(--green);
+}
+
+.music-link {
+  display: block;
+  text-decoration: none;
+  color: var(--ink);
+  background: #faf8f2;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  margin: 10px 0;
+  font-size: 14px;
+}
+
+.music-link span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 11px;
+  padding: 24px 0;
+}
+
+@media (max-width: 380px) {
+  .countdown {
+    gap: 5px;
+  }
+
+  .time {
+    padding: 12px 1px;
+  }
+
+  .nav button {
+    font-size: 9px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="brand">A little Christmas magic</div>
+  <h1>Merry &amp; Bright</h1>
+  <div class="subtitle">
+    A little closer to Christmas.<br>
+    Slow down and get cozy.<br>
+    Let the magic find you. ✨
+  </div>
+</header>
+
+<main>
+
+  <!-- HOME PAGE -->
+  <section id="home" class="page active">
+
+    <div class="card">
+      <div class="label">The countdown is on</div>
+      <h2>Until Christmas Day 🎄</h2>
+
+      <div class="countdown">
+        <div class="time">
+          <strong id="days">00</strong>
+          <span>Days</span>
+        </div>
+
+        <div class="time">
+          <strong id="hours">00</strong>
+          <span>Hours</span>
+        </div>
+
+        <div class="time">
+          <strong id="minutes">00</strong>
+          <span>Minutes</span>
+        </div>
+
+        <div class="time">
+          <strong id="seconds">00</strong>
+          <span>Seconds</span>
+        </div>
+      </div>
+
+      <p id="countdown-message">
+        Every little moment brings a little more magic.
+      </p>
+    </div>
+
+    <div class="town" style="margin-top:17px">
+      <div class="town-title">✧ WELCOME TO CHRISTMAS TOWN ✧</div>
+
+      <div class="snowflakes">❄ &nbsp; ✦ &nbsp; ❄ &nbsp; ✧</div>
+
+      <div class="trees">
+        <span class="tree small">🌲</span>
+        <span class="tree">🎄</span>
+        <span class="tree small">🌲</span>
+        <span class="tree">🎄</span>
+        <span class="tree small">🌲</span>
+      </div>
+
+      <div class="houses">
+        <span>🏠</span>
+        <span>🏡</span>
+        <span>🏠</span>
+        <span>🏡</span>
+        <span>🏠</span>
+      </div>
+
+      <div class="town-ground">
+        🧝🏻‍♀️ &nbsp; A tiny town full of holiday magic &nbsp; 🧝🏻‍♂️
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="label">A little moment for you</div>
+      <h2 id="magic-title">Today's Little Magic ✨</h2>
+      <p id="magic-text">
+        Make a warm drink, put on your coziest sweater,
+        and enjoy five minutes of doing absolutely nothing.
+      </p>
+      <button class="primary" onclick="newMagic()">
+        Find a little magic ✨
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="label">Your holiday list</div>
+      <h2>Little Things to Do 🎀</h2>
+      <p>Small moments make the sweetest memories.</p>
+
+      <div id="home-activities"></div>
+
+      <div class="progress">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+
+      <p id="progress-text">0 of 6 little moments completed</p>
+    </div>
+
+  </section>
+
+  <!-- CALENDAR PAGE -->
+  <section id="calendar" class="page">
+
+    <div class="card">
+      <div class="label">Make a little plan</div>
+      <h2>Christmas Calendar 📅</h2>
+      <p>Choose a day to add a little holiday magic.</p>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <button class="secondary" onclick="changeMonth(-1)">
+          ← Previous
+        </button>
+
+        <strong id="month-title"></strong>
+
+        <button class="secondary" onclick="changeMonth(1)">
+          Next →
+        </button>
+      </div>
+
+      <div class="calendar-grid" id="calendar-grid"></div>
+
+      <div class="card" style="margin-top:18px">
+        <div class="label">Your selected day</div>
+        <h2 id="selected-date">Choose a date</h2>
+        <p id="selected-event">Your little plans will appear here.</p>
+
+        <input
+          id="event-input"
+          type="text"
+          maxlength="120"
+          placeholder="Add a little plan..."
+          style="width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:14px Georgia,serif"
+        >
+
+        <button
+          class="primary"
+          style="margin-top:12px"
+          onclick="saveEvent()"
+        >
+          Save my plan
+        </button>
+
+        <button
+          class="secondary"
+          style="margin-top:12px"
+          onclick="deleteEvent()"
+        >
+          Remove plan
+        </button>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- MUSIC PAGE -->
+  <section id="music" class="page">
+
+    <div class="card">
+      <div class="label">A little holiday soundtrack</div>
+      <h2>Christmas Music 🎵</h2>
+
+      <p>
+        Settle in, get cozy, and find a soundtrack for your
+        own little Christmas movie.
+      </p>
+
+      <a
+        class="music-link"
+        href="https://www.youtube.com/results?search_query=cozy+christmas+music"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🎄 Cozy Christmas Music<br>
+        <span>Open holiday music on YouTube ↗</span>
+      </a>
+
+      <a
+        class="music-link"
+        href="https://www.youtube.com/results?search_query=christmas+jazz+cafe"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ☕ Christmas Café Jazz<br>
+        <span>Soft music for a cozy afternoon ↗</span>
+      </a>
+
+      <a
+        class="music-link"
+        href="https://www.youtube.com/results?search_query=peaceful+winter+piano"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        ❄️ Peaceful Winter Piano<br>
+        <span>Gentle piano for a quiet evening ↗</span>
+      </a>
+
+      <a
+        class="music-link"
+        href="https://www.youtube.com/results?search_query=christmas+cabin+ambience+fireplace"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        🕯️ Christmas Cabin Ambience<br>
+        <span>A virtual fireplace and winter atmosphere ↗</span>
+      </a>
+    </div>
+
+    <div class="card">
+      <div class="label">A gentle reminder</div>
+      <h2>Make yourself at home 🤍</h2>
+      <p>
+        There is no rush to make the season perfect.
+        Put on something comforting, take a breath,
+        and enjoy the little things.
+      </p>
+    </div>
+
+  </section>
+
+  <!-- SNOW GLOBE PAGE -->
+  <section id="globe" class="page">
+
+    <div class="card" style="text-align:center">
+      <div class="label">A tiny world of winter magic</div>
+      <h2>Your Little Snow Globe ❄️</h2>
+
+      <p>
+        Tap the globe to give it a little shake
+        and watch the snow fall.
+      </p>
+
+      <div
+        class="big-globe"
+        id="snow-globe"
+        onclick="shakeGlobe()"
+        role="button"
+        tabindex="0"
+        aria-label="Shake the snow globe"
+      >
+        🔮
+      </div>
+
+      <div id="globe-scene"
+           style="font-size:30px;letter-spacing:5px">
+        🌲 🏠 🎄
+      </div>
+
+      <p id="globe-message">
+        A little winter wonderland, just for you.
+      </p>
+
+      <button class="primary" onclick="shakeGlobe()">
+        Shake the snow globe ✨
+      </button>
+    </div>
+
+    <div class="card">
+      <div class="label">A little wish</div>
+      <h2>Wish Upon a Snowflake ⭐</h2>
+
+      <p>
+        Think of one little thing you're looking forward to
+        this Christmas.
+      </p>
+
+      <button class="secondary" onclick="makeWish()">
+        Make a Christmas wish
+      </button>
+
+      <p id="wish-message"></p>
+    </div>
+
+  </section>
+
+  <!-- SETTINGS PAGE -->
+  <section id="settings" class="page">
+
+    <div class="card">
+      <div class="label">Make it your own</div>
+      <h2>Settings ⚙️</h2>
+
+      <p>
+        A few little touches to make your Christmas
+        space feel like yours.
+      </p>
+
+      <div class="setting-row">
+        <span>Greeting</span>
+
+        <select id="greeting-setting" onchange="updateGreeting()">
+          <option value="Merry & Bright">Merry & Bright</option>
+          <option value="A Cozy Christmas">A Cozy Christmas</option>
+          <option value="Winter Wishes">Winter Wishes</option>
+        </select>
+      </div>
+
+      <div class="setting-row">
+        <span>Background color</span>
+        <input
+          id="color-setting"
+          type="color"
+          value="#fffdf9"
+          onchange="changeBackground()"
+        >
+      </div>
+
+      <div class="setting-row">
+        <span>Show countdown</span>
+        <input
+          id="countdown-setting"
+          type="checkbox"
+          checked
+          onchange="toggleCountdown()"
+        >
+      </div>
+
+      <div class="setting-row">
+        <span>Show falling snow</span>
+        <input
+          id="snow-setting"
+          type="checkbox"
+          onchange="toggleSnow()"
+        >
+      </div>
+
+      <div class="setting-row">
+        <span>Reset activity checklist</span>
+        <button class="secondary" onclick="resetActivities()">
+          Reset
+        </button>
+      </div>
+
+      <p>
+        Your preferences are saved in this browser on this device.
+      </p>
+    </div>
+
+    <div class="card">
+      <div class="label">A little note</div>
+      <h2>Slow down & get cozy 🤍</h2>
+      <p>
+        Let the magic find you.
+        One little moment at a time.
+      </p>
+    </div>
+
+  </section>
+
+  <footer>
+    Made with a little Christmas magic ✨
+  </footer>
+
+</main>
+
+<!-- BOTTOM NAVIGATION -->
+<nav class="nav" aria-label="Main navigation">
+
+  <button class="active" data-page="home" onclick="showPage('home',this)">
+    <span class="icon">⌂</span>
+    Home
+  </button>
+
+  <button data-page="calendar" onclick="showPage('calendar',this)">
+    <span class="icon">🗓</span>
+    Calendar
+  </button>
+
+  <button data-page="music" onclick="showPage('music',this)">
+    <span class="icon">♫</span>
+    Music
+  </button>
+
+  <button data-page="globe" onclick="showPage('globe',this)">
+    <span class="icon">❄</span>
+    Snow Globe
+  </button>
+
+  <button data-page="settings" onclick="showPage('settings',this)">
+    <span class="icon">⚙</span>
+    Settings
+  </button>
+
+</nav>
+
+<script>
+/* CHRISTMAS COUNTDOWN */
+
+function updateCountdown() {
+  const now = new Date();
+  let christmas = new Date(now.getFullYear(), 11, 25, 0, 0, 0);
+
+  if (now >= christmas) {
+    christmas = new Date(now.getFullYear() + 1, 11, 25, 0, 0, 0);
+  }
+
+  const difference = christmas.getTime() - now.getTime();
+
+  const days = Math.floor(difference / 86400000);
+  const hours = Math.floor((difference % 86400000) / 3600000);
+  const minutes = Math.floor((difference % 3600000) / 60000);
+  const seconds = Math.floor((difference % 60000) / 1000);
+
+  document.getElementById("days").textContent = days;
+  document.getElementById("hours").textContent = String(hours).padStart(2, "0");
+  document.getElementById("minutes").textContent = String(minutes).padStart(2, "0");
+  document.getElementById("seconds").textContent = String(seconds).padStart(2, "0");
+
+  document.getElementById("countdown-message").textContent =
+    days === 0
+      ? "Christmas is almost here. Enjoy every little moment! 🎄"
+      : "Every little moment brings a little more magic. ✨";
+}
+
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+
+/* BOTTOM NAVIGATION */
+
+function showPage(pageId, button) {
+  document.querySelectorAll(".page").forEach(page => {
+    page.classList.remove("active");
+  });
+
+  document.getElementById(pageId).classList.add("active");
+
+  document.querySelectorAll(".nav button").forEach(navButton => {
+    navButton.classList.remove("active");
+  });
+
+  button.classList.add("active");
+
+  window.scrollTo({ top: 0, behavior: "smooth" });
+
+  if (pageId === "calendar") {
+    renderCalendar();
+  }
+}
+
+
+/* DAILY LITTLE MAGIC */
+
+const magicIdeas = [
+  {
+    title: "Today's Little Magic ✨",
+    text: "Make a warm drink, put on your coziest sweater, and enjoy five minutes of doing absolutely nothing."
+  },
+  {
+    title: "A Little Kindness 🤍",
+    text: "Send someone a kind message or tell them one thing you appreciate about them."
+  },
+  {
+    title: "Cozy Corner ☕",
+    text: "Find your favorite blanket, turn on a soft light, and enjoy a peaceful moment."
+  },
+  {
+    title: "Christmas Creativity 🎀",
+    text: "Draw a tiny Christmas village, decorate a card, or make something just for fun."
+  },
+  {
+    title: "Winter Wonder ❄️",
+    text: "Look outside for a moment and notice something beautiful about the world around you."
+  },
+  {
+    title: "A Little Nostalgia 🎄",
+    text: "Think of a favorite holiday memory and write down what made it special."
+  },
+  {
+    title: "Slow Sunday Feeling 🕯️",
+    text: "Put on some peaceful music and give yourself permission to take things slowly."
+  }
+];
+
+let magicIndex = 0;
+
+function newMagic() {
+  magicIndex = (magicIndex + 1) % magicIdeas.length;
+
+  document.getElementById("magic-title").textContent =
+    magicIdeas[magicIndex].title;
+
+  document.getElementById("magic-text").textContent =
+    magicIdeas[magicIndex].text;
+}
+
+
+/* INTERACTIVE ACTIVITY CHECKLIST */
+
+const activityIdeas = [
+  "Make a cozy Christmas playlist 🎵",
+  "Watch a favorite holiday movie 🎬",
+  "Make hot chocolate or another warm drink ☕",
+  "Write down three things you're grateful for 🤍",
+  "Decorate a little corner of your room 🎄",
+  "Make or write a Christmas card 🎀"
+];
+
+const activityContainer = document.getElementById("home-activities");
+
+function loadActivities() {
+  activityContainer.innerHTML = "";
+
+  activityIdeas.forEach((idea, index) => {
+    const row = document.createElement("label");
+    row.className = "activity";
+
+    const checkbox = document.createElement("input");
+    checkbox.type = "checkbox";
+    checkbox.checked =
+      localStorage.getItem("mb-activity-" + index) === "true";
+
+    const text = document.createElement("span");
+    text.textContent = idea;
+
+    row.appendChild(checkbox);
+    row.appendChild(text);
+
+    checkbox.addEventListener("change", () => {
+      localStorage.setItem(
+        "mb-activity-" + index,
+        String(checkbox.checked)
+      );
+
+      row.classList.toggle("done", checkbox.checked);
+      updateProgress();
+    });
+
+    row.classList.toggle("done", checkbox.checked);
+
+    activityContainer.appendChild(row);
+  });
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const boxes = activityContainer.querySelectorAll("input");
+  const complete = [...boxes].filter(box => box.checked).length;
+
+  document.getElementById("progress-fill").style.width =
+    (complete / activityIdeas.length * 100) + "%";
+
+  document.getElementById("progress-text").textContent =
+    complete + " of " + activityIdeas.length +
+    " little moments completed";
+}
+
+function resetActivities() {
+  activityIdeas.forEach((_, index) => {
+    localStorage.removeItem("mb-activity-" + index);
+  });
+
+  loadActivities();
+}
+
+loadActivities();
+
+
+/* CHRISTMAS CALENDAR */
+
+let calendarDate = new Date();
+calendarDate = new Date(
+  calendarDate.getFullYear(),
+  calendarDate.getMonth(),
+  1
+);
+
+let selectedDate = null;
+
+function dateKey(date) {
+  return date.getFullYear() + "-" +
+    String(date.getMonth() + 1).padStart(2, "0") + "-" +
+    String(date.getDate()).padStart(2, "0");
+}
+
+function getEvents() {
+  try {
+    return JSON.parse(localStorage.getItem("mb-calendar-events") || "{}");
+  } catch {
+    return {};
+  }
+}
+
+function renderCalendar() {
+  const grid = document.getElementById("calendar-grid");
+  const title = document.getElementById("month-title");
+
+  grid.innerHTML = "";
+
+  title.textContent = calendarDate.toLocaleDateString("en-US", {
+    month: "long",
+    year: "numeric"
+  });
+
+  ["S", "M", "T", "W", "T", "F", "S"].forEach(day => {
+    const weekday = document.createElement("div");
+    weekday.className = "weekday";
+    weekday.textContent = day;
+    grid.appendChild(weekday);
+  });
+
+  const firstDay = calendarDate.getDay();
+
+  const year = calendarDate.getFullYear();
+  const month = calendarDate.getMonth();
+
+  const numberOfDays = new Date(year, month + 1, 0).getDate();
+  const events = getEvents();
+
+  for (let i = 0; i < firstDay; i++) {
+    grid.appendChild(document.createElement("div"));
+  }
+
+  for (let day = 1; day <= numberOfDays; day++) {
+    const date = new Date(year, month, day);
+    const key = dateKey(date);
+
+    const button = document.createElement("button");
+    button.className = "calendar-day";
+    button.textContent = day;
+
+    if (events[key]) {
+      button.classList.add("event");
+      button.title = events[key];
+    }
+
+    if (selectedDate === key) {
+      button.classList.add("selected");
+    }
+
+    button.addEventListener("click", () => {
+      selectedDate = key;
+
+      document.getElementById("selected-date").textContent =
+        date.toLocaleDateString("en-US", {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric"
+        });
+
+      document.getElementById("event-input").value =
+        events[key] || "";
+
+      document.getElementById("selected-event").textContent =
+        events[key] || "No plans saved for this day yet.";
+
+      renderCalendar();
+    });
+
+    grid.appendChild(button);
+  }
+}
+
+function changeMonth(amount) {
+  calendarDate = new Date(
+    calendarDate.getFullYear(),
+    calendarDate.getMonth() + amount,
+    1
+  );
+
+  renderCalendar();
+}
+
+function saveEvent() {
+  if (!selectedDate) {
+    alert("Choose a day on the calendar first!");
+    return;
+  }
+
+  const value = document.getElementById("event-input").value.trim();
+
+  const events = getEvents();
+
+  if (value) {
+    events[selectedDate] = value;
+  } else {
+    delete events[selectedDate];
+  }
+
+  localStorage.setItem("mb-calendar-events", JSON.stringify(events));
+
+  document.getElementById("selected-event").textContent =
+    value || "No plans saved for this day yet.";
+
+  renderCalendar();
+}
+
+function deleteEvent() {
+  if (!selectedDate) {
+    alert("Choose a day on the calendar first!");
+    return;
+  }
+
+  const events = getEvents();
+
+  delete events[selectedDate];
+
+  localStorage.setItem("mb-calendar-events", JSON.stringify(events));
+
+  document.getElementById("event-input").value = "";
+  document.getElementById("selected-event").textContent =
+    "No plans saved for this day yet.";
+
+  renderCalendar();
+}
+
+renderCalendar();
+
+
+/* INTERACTIVE SNOW GLOBE */
+
+let globeTimeout;
+
+function shakeGlobe() {
+  const globe = document.getElementById("snow-globe");
+  const message = document.getElementById("globe-message");
+
+  globe.classList.add("shake");
+
+  message.textContent =
+    "❄️ ✨ ❄️ Let it snow, let it snow, let it snow! ❄️ ✨ ❄️";
+
+  clearTimeout(globeTimeout);
+
+  globeTimeout = setTimeout(() => {
+    globe.classList.remove("shake");
+
+    message.textContent =
+      "The snow has settled. Your little winter world is peaceful again. 🤍";
+  }, 1800);
+}
+
+document.getElementById("snow-globe").addEventListener("keydown", event => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    shakeGlobe();
+  }
+});
+
+function makeWish() {
+  const wishes = [
+    "May your days be cozy and your heart feel light. ✨",
+    "Here's to little moments that turn into lovely memories. 🎄",
+    "May something wonderful surprise you this season. ❄️",
+    "Remember: the little things are often the most magical. 🤍",
+    "May your Christmas be full of warmth, kindness, and joy. 🎀"
+  ];
+
+  const wish = wishes[Math.floor(Math.random() * wishes.length)];
+
+  document.getElementById("wish-message").textContent = wish;
+}
+
+
+/* PERSONALIZATION SETTINGS */
+
+function updateGreeting() {
+  const greeting = document.getElementById("greeting-setting").value;
+
+  document.querySelector("h1").textContent = greeting;
+
+  localStorage.setItem("mb-greeting", greeting);
+}
+
+function changeBackground() {
+  const color = document.getElementById("color-setting").value;
+
+  document.documentElement.style.setProperty("--bg", color);
+
+  localStorage.setItem("mb-background", color);
+}
+
+function toggleCountdown() {
+  const checked =
+    document.getElementById("countdown-setting").checked;
+
+  document.querySelector("#home .countdown").style.display =
+    checked ? "grid" : "none";
+
+  document.querySelector("#home .countdown").previousElementSibling
+    .style.display = checked ? "block" : "none";
+
+  localStorage.setItem("mb-show-countdown", String(checked));
+}
+
+let snowEnabled = false;
+let snowTimer = null;
+
+function toggleSnow() {
+  snowEnabled = document.getElementById("snow-setting").checked;
+
+  if (snowEnabled) {
+    startSnow();
+  } else {
+    stopSnow();
+  }
+
+  localStorage.setItem("mb-show-snow", String(snowEnabled));
+}
+
+function startSnow() {
+  stopSnow();
+
+  snowTimer = setInterval(() => {
+    const flake = document.createElement("div");
+
+    flake.textContent = Math.random() > 0.5 ? "❄" : "✧";
+
+    flake.style.position = "fixed";
+    flake.style.top = "-20px";
+    flake.style.left = Math.random() * 100 + "vw";
+    flake.style.zIndex = "20";
+    flake.style.pointerEvents = "none";
+    flake.style.color = "#aab9c5";
+    flake.style.fontSize = (10 + Math.random() * 12) + "px";
+    flake.style.opacity = "0.8";
+    flake.style.transition = "transform 5s linear, opacity 5s linear";
+
+    document.body.appendChild(flake);
+
+    requestAnimationFrame(() => {
+      flake.style.transform =
+        "translate(" + (Math.random() * 70 - 35) +
+        "px, " + (window.innerHeight + 40) + "px) rotate(360deg)";
+
+      flake.style.opacity = "0.1";
+    });
+
+    setTimeout(() => flake.remove(), 5200);
+  }, 350);
+}
+
+function stopSnow() {
+  clearInterval(snowTimer);
+  snowTimer = null;
+}
+
+function loadSettings() {
+  const greeting = localStorage.getItem("mb-greeting");
+  const background = localStorage.getItem("mb-background");
+  const countdown = localStorage.getItem("mb-show-countdown");
+  const snow = localStorage.getItem("mb-show-snow");
+
+  if (greeting) {
+    document.getElementById("greeting-setting").value = greeting;
+    document.querySelector("h1").textContent = greeting;
+  }
+
+  if (background) {
+    document.getElementById("color-setting").value = background;
+    document.documentElement.style.setProperty("--bg", background);
+  }
+
+  if (countdown === "false") {
+    document.getElementById("countdown-setting").checked = false;
+    toggleCountdown();
+  }
+
+  if (snow === "true") {
+    document.getElementById("snow-setting").checked = true;
+    toggleSnow();
+  }
+}
+
+loadSettings();
+</script>
+
+</body>
+</html>
+
